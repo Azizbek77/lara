@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 use Auth;
+
 use Closure;
 
 class CheckStatus
@@ -19,6 +20,6 @@ class CheckStatus
         if(Auth::user() && Auth::user()->isAdmin())
             return $next($request);
 
-        redirect('/');
+        abort(403);
     }
 }
