@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Blog\User;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use MetaTag;
 class MainController extends Controller
 {
 
@@ -20,6 +20,9 @@ class MainController extends Controller
      */
     public function index()
     {
+        MetaTag::setTags([
+            'title' => 'User панел',
+        ]);
         return view('blog.user.index');
     }
 
