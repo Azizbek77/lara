@@ -13,9 +13,6 @@
         <li><a href=""><i></i>{{$category}}</a></li>
     @endif
 
-    @if (isset($order))
-        <li><a href=""><i></i>{{$order}}</a></li>
-    @endif
     @if (isset($user))
         <li><a href=""><i></i>{{$user}}</a></li>
     @endif
