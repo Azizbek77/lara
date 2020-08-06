@@ -61,4 +61,37 @@ class OrderRepository   extends CoreRepository
         return$order_products;
     }
 
+
+    public function changeStatusOrder($id){
+
+        $item = $this->getById($id);
+        if(!$item)
+            abort(404);
+
+        $item->status = $_GET['status'];
+        $result = $item->update();
+        return $result;
+    }
+    public function changeStatusOnDelete($id){
+
+        $item = $this->getById($id);
+        if(!$item){
+            abort(404);
+        }
+        $item->status = '2';
+
+        $result = $item->update();
+        return $result;
+    }
+    public function saveOrderComment($id){
+        $item = $this->getById($id);
+        if(!$item){
+            abort(404);
+        }
+
+        $item->note  = $_POST['comment'];
+        $res = $item->update();
+        return $res;
+    }
+
 }

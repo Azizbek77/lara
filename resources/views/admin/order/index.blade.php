@@ -44,7 +44,7 @@
 
                                 <td>
                                     <a><i class="fa fa-fw fa-eye"></i></a>
-                                    <a href="{{route('blog/admin.orders.edit',$order->id)}} " title="редактироват"><i class="fa fa-fw fa-eye"></i></a>
+                                    <a href="{{route('blog.admin.orders.edit',$order->id)}} " title="редактироват"><i class="fa fa-fw fa-eye"></i></a>
                                     <a title="удалить"><i class="fa fa-fw fa-close text-danger"></i></a>
 
                                 </td>

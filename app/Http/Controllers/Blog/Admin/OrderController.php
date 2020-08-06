@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Controllers\Blog\AdminBaseController;
+use App\Http\Requests\AdminOrderSaveRequest;
+use App\Models\Admin\Order;
 use App\Repositories\Admin\MainRepository;
 use App\Repositories\Admin\OrderRepository;
 use Illuminate\Http\Request;
@@ -27,10 +29,10 @@ class OrderController extends AdminBaseController
      */
     public function index()
     {
-        $prepage = 5;
+        $prepage = 10;
         \MetaTag::setTags(['title'=>'Список заказов']);
         $countOrders = MainRepository::getCountOrders();
-        $paginator = $this->orderRepository->getAllOrders(5);
+        $paginator = $this->orderRepository->getAllOrders($prepage);
         return view('admin.order.index',compact('countOrders','paginator'));
     }
 
@@ -83,7 +85,7 @@ class OrderController extends AdminBaseController
 
         \MetaTag::setTags(['title'=>"Заказ № {$item->id}"]);
 
-        return view('admin.order.edit',compact('order','order_products'));
+        return view('admin.order.edit',compact('order','order_products','item'));
     }
 
     /**
@@ -106,6 +108,57 @@ class OrderController extends AdminBaseController
      */
     public function destroy($id)
     {
-        //
+        $item = $this->orderRepository->changeStatusOnDelete($id);
+
+        if($item){
+            $res = Order::destroy($id);
+            return redirect()
+                ->route('blog.admin.orders.index')
+                ->with(['success'=>'Запис {$id} удаления']);
+
+        }else{
+            return back()->withErrors(['msg'=>'Ошибка удаления']);
+        }
+
+
+
     }
+
+    public function change($id){
+        $result = $this->orderRepository->changeStatusOrder($id);
+
+        if($result){
+            return redirect()
+                ->route('blog.admin.orders.edit',$id)
+                ->with(['success'=>'Успешно сохранено']);
+        }else{
+            return back()
+                ->withErrors(['msg'=>'Ошибка сохранентя']);
+        }
+
+    }
+
+
+    public function save(AdminOrderSaveRequest $request ,$id){
+        $res = $this->orderRepository->saveOrderComment($id);
+
+        if($res){
+            return redirect()
+                ->route('blog.admin.orders.edit',$id)
+                ->with(['success'=>'Успешно сохранено']);
+        }else{
+            return back()
+                ->withErrors(['msg'=>'Ошибка сохранентя']);
+        }
+    }
+
+    public function forcedestroy($id){
+        if(empty($id)){
+            return back()->withErrors(['msg'=>'zapis ne naydeno']);
+        }
+        $res = \DB::table('orders')->delete($id);
+
+        return back();
+    }
+
 }
